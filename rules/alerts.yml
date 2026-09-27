@@ -1,0 +1,20 @@
+groups:
+  - name: event-system-alerts
+    rules:
+      - alert: EventAppDown
+        expr: up{job="event-app"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Event App is Down"
+          description: "Ung dung Event App da bi tat hoac chet tien trinh!"
+
+      - alert: HostHighCpu
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) > 80
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "CPU May chu cao tren 80%"
+
