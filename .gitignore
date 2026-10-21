@@ -1,7 +1,5 @@
-__pycache__/
-*.pyc
+node_modules/
 .env
 *.log
-volumes/
-data/
-docker-compose.yml.bak
+nginx/certs/*.key
+nginx/certs/*.crt

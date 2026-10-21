@@ -7,14 +7,13 @@ groups:
         labels:
           severity: critical
         annotations:
-          summary: "Event App is Down"
-          description: "Ung dung Event App da bi tat hoac chet tien trinh!"
-
+          summary: Event App is down
+          description: Event App target is not reachable.
       - alert: HostHighCpu
         expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) > 80
         for: 2m
         labels:
           severity: warning
         annotations:
-          summary: "CPU May chu cao tren 80%"
-
+          summary: Host CPU is above 80 percent
+          description: Host CPU usage has exceeded 80 percent for 2 minutes.

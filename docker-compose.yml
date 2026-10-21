@@ -3,42 +3,60 @@ services:
     build: ./app
     container_name: event-app
     restart: unless-stopped
+    env_file: .env
     environment:
       DB_HOST: postgres
-      DB_USER: event_user
-      DB_PASSWORD: event_password
-      DB_NAME: event_db
-    networks:
-      - event-net
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_NAME: ${POSTGRES_DB}
+    networks: [frontend, backend]
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:5000/health',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   postgres:
     image: postgres:16-alpine
     container_name: postgres
     restart: unless-stopped
+    env_file: .env
     environment:
-      POSTGRES_USER: event_user
-      POSTGRES_PASSWORD: event_password
-      POSTGRES_DB: event_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - event-net
+    networks: [backend]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: pgadmin
     ports:
-      - "5050:80"
+      - "127.0.0.1:5050:80"
     restart: unless-stopped
+    env_file: .env
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@event.com
-      PGADMIN_DEFAULT_PASSWORD: adminpassword
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     volumes:
       - pgadmin_data:/var/lib/pgadmin
-    networks:
-      - event-net
+    networks: [frontend, backend]
+    security_opt:
+      - no-new-privileges:true
 
   nginx:
     image: nginx:alpine
@@ -46,52 +64,81 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
-    networks:
-      - event-net
+      - ./nginx/certs:/etc/nginx/certs:ro
+    networks: [frontend]
     depends_on:
-      - event-app
-      - pgadmin
+      event-app:
+        condition: service_healthy
+      pgadmin:
+        condition: service_started
+    security_opt:
+      - no-new-privileges:true
 
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
     restart: unless-stopped
     ports:
-      - "9090:9090"
+      - "127.0.0.1:9090:9090"
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./rules:/etc/prometheus/rules
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./rules:/etc/prometheus/rules:ro
       - prometheus_data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-    networks:
-      - event-net
+    command: ["--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.path=/prometheus"]
+    networks: [monitoring]
+    depends_on:
+      event-app:
+        condition: service_healthy
 
   node-exporter:
     image: prom/node-exporter:latest
     container_name: node-exporter
     restart: unless-stopped
     ports:
-      - "9100:9100"
-    networks:
-      - event-net
+      - "127.0.0.1:9100:9100"
+    networks: [monitoring]
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: cadvisor
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+    networks: [monitoring]
+
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.15.0
+    container_name: postgres-exporter
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_NAME: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
+    networks: [backend, monitoring]
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   loki:
     image: grafana/loki:latest
     container_name: loki
     restart: unless-stopped
     ports:
-      - "3100:3100"
+      - "127.0.0.1:3100:3100"
     volumes:
-      - ./loki/loki-config.yml:/etc/loki/loki-config.yaml
+      - ./loki/loki-config.yml:/etc/loki/loki-config.yaml:ro
       - loki_data:/loki
-    command:
-      - -config.file=/etc/loki/loki-config.yaml
-    networks:
-      - event-net
+    command: ["-config.file=/etc/loki/loki-config.yaml"]
+    networks: [monitoring]
 
   promtail:
     image: grafana/promtail:latest
@@ -99,14 +146,13 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./promtail/promtail-config.yml:/etc/promtail/config.yml
+      - ./promtail/promtail-config.yml:/etc/promtail/config.yml:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
-    command:
-      - -config.file=/etc/promtail/config.yml
-    depends_on:
-      - loki
-    networks:
-      - event-net
+    command: ["-config.file=/etc/promtail/config.yml"]
+    depends_on: [loki]
+    networks: [monitoring]
+    security_opt:
+      - no-new-privileges:true
 
   grafana:
     image: grafana/grafana:latest
@@ -114,12 +160,14 @@ services:
     restart: unless-stopped
     ports:
       - "3000:3000"
+    env_file: .env
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
     volumes:
       - grafana_data:/var/lib/grafana
-    networks:
-      - event-net
-    depends_on:
-      - prometheus
+    networks: [monitoring]
+    depends_on: [prometheus, loki]
 
 volumes:
   postgres_data:
@@ -129,5 +177,10 @@ volumes:
   grafana_data:
 
 networks:
-  event-net:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+    internal: true
+  monitoring:
     driver: bridge

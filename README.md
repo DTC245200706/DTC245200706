@@ -1,194 +1,124 @@
 # Hệ thống đặt vé sự kiện – Docker Compose
 
 **Mã số sinh viên:** DTC245200706
-**Môn học:** Triển khai và Quản trị Hệ thống Phần mềm
 **Repository:** https://github.com/Dvihndg/DTC245200706
 
 ## 1. Giới thiệu
 
-Đây là hệ thống đặt vé sự kiện được triển khai bằng Docker Compose. Hệ thống gồm ứng dụng web Node.js/Express, PostgreSQL, pgAdmin 4, Nginx Reverse Proxy, Prometheus, Grafana, Node Exporter, Loki và Promtail.
+Hệ thống gồm Event App Node.js/Express, PostgreSQL, pgAdmin 4, Nginx Reverse Proxy, Prometheus, Grafana, Node Exporter, cAdvisor, postgres-exporter, Loki và Promtail. Toàn bộ dịch vụ được quản lý bằng Docker Compose.
 
-Mục tiêu của dự án:
+Mục tiêu: triển khai ứng dụng và database, reverse proxy HTTPS, thu thập metrics cho web/container/database, tập trung log bằng Loki/Promtail và áp dụng hardening cơ bản.
 
-- Đóng gói ứng dụng, cơ sở dữ liệu và các công cụ vận hành bằng Docker Compose.
-- Sử dụng Nginx làm điểm truy cập chính và reverse proxy đến ứng dụng.
-- Thu thập metrics bằng Prometheus và hiển thị trên Grafana.
-- Tập trung log container bằng Promtail và Loki, truy vấn bằng LogQL.
-- Quản lý mã nguồn và cấu hình trên GitHub theo các mốc commit có ý nghĩa.
+## 2. Kiến trúc và network isolation
 
-> **Lưu ý về phạm vi hiện tại:** cấu hình hiện tại đã có Node Exporter và metrics của ứng dụng. Repository chưa khai báo service cAdvisor trong `docker-compose.yml`; vì vậy không nên ghi cAdvisor là thành phần đã triển khai cho đến khi bổ sung service và target tương ứng.
+- `frontend`: Nginx, Event App và pgAdmin.
+- `backend` (internal): Event App, PostgreSQL và postgres-exporter.
+- `monitoring`: Prometheus, Grafana, Loki, Promtail, Node Exporter, cAdvisor và postgres-exporter.
+- Event App và PostgreSQL không public port trực tiếp; người dùng truy cập qua Nginx.
 
-## 2. Kiến trúc hệ thống
+## 3. Các cổng truy cập
 
-```text
-                         Người dùng / Quản trị viên
-                                   |
-                    +--------------+--------------+
-                    |                             |
-              Nginx :80                         Các cổng quản trị
-                    |                       pgAdmin :5050
-              Event App :5000                 Grafana :3000
-                    |                         Prometheus :9090
-              PostgreSQL :5432                 Loki :3100
+| Dịch vụ | Địa chỉ | Ghi chú |
+|---|---|---|
+| Website | https://localhost/ | HTTPS tự ký; trình duyệt sẽ cảnh báo chứng thư demo |
+| pgAdmin | http://localhost:5050/ | Chỉ bind localhost |
+| Grafana | http://localhost:3000/ | Dashboard và Explore |
+| Prometheus | http://localhost:9090/ | Targets và PromQL |
+| Loki | http://localhost:3100/ready | Health check |
+| Node Exporter | http://localhost:9100/metrics | Host metrics |
+| cAdvisor | http://localhost:8080/metrics | Container metrics |
 
-  Node Exporter :9100  ---> Prometheus ---> Grafana
-  Docker logs           ---> Promtail ---> Loki ---> Grafana Explore
-```
+## 4. Chuẩn bị và khởi chạy
 
-Các container dùng chung Docker bridge network `event-net`. Ứng dụng và PostgreSQL không ánh xạ cổng trực tiếp ra máy host; Nginx chuyển tiếp request đến ứng dụng qua tên service Docker.
-
-## 3. Thành phần và cổng truy cập
-
-| Thành phần | Container | Cổng host | Mục đích |
-|---|---|---:|---|
-| Website qua Nginx | `nginx` | `80` | Điểm truy cập chính của ứng dụng |
-| Event App | `event-app` | Không public | Ứng dụng Node.js/Express, cổng nội bộ `5000` |
-| PostgreSQL | `postgres` | Không public | Cơ sở dữ liệu, cổng nội bộ `5432` |
-| pgAdmin 4 | `pgadmin` | `5050` | Quản trị PostgreSQL |
-| Grafana | `grafana` | `3000` | Dashboard metrics và truy vấn log |
-| Prometheus | `prometheus` | `9090` | Thu thập và truy vấn metrics |
-| Node Exporter | `node-exporter` | `9100` | Metrics hệ điều hành |
-| Loki | `loki` | `3100` | Lưu trữ log tập trung |
-| Promtail | `promtail` | Không public | Đọc Docker log và gửi đến Loki |
-
-## 4. Yêu cầu môi trường
-
-- Docker Engine phiên bản hỗ trợ Docker Compose v2.
-- Docker Compose Plugin (`docker compose`).
-- Git.
-- Trình duyệt web.
-
-Kiểm tra cài đặt:
-
-```bash
-docker --version
-docker compose version
-git --version
-```
-
-## 5. Cài đặt và khởi chạy
-
-Clone repository:
+Yêu cầu: Docker Engine, Docker Compose v2, Git và OpenSSL.
 
 ```bash
 git clone https://github.com/Dvihndg/DTC245200706.git
 cd DTC245200706
-```
-
-Khởi chạy lần đầu và build image ứng dụng:
-
-```bash
+cp .env.example .env
+# Sửa các mật khẩu mạnh trong .env trước khi chạy
+bash scripts/generate-certs.sh
 docker compose up -d --build
-```
-
-Kiểm tra trạng thái container:
-
-```bash
 docker compose ps
 ```
 
-Xem log toàn hệ thống:
+Các lệnh vận hành:
 
 ```bash
 docker compose logs -f
-```
-
-Xem log một service:
-
-```bash
 docker compose logs -f event-app
-docker compose logs -f nginx
-docker compose logs -f postgres
-```
-
-Dừng hệ thống nhưng giữ lại volume dữ liệu:
-
-```bash
 docker compose stop
-```
-
-Dừng và xóa container/network nhưng giữ volume:
-
-```bash
 docker compose down
 ```
 
-> Không chạy `docker compose down -v` nếu muốn giữ dữ liệu PostgreSQL, Grafana, pgAdmin, Prometheus và Loki.
+Không chạy `docker compose down -v` nếu muốn giữ dữ liệu database, Grafana, Prometheus, Loki và pgAdmin.
 
-## 6. Địa chỉ truy cập
+## 5. Database và pgAdmin
 
-Sau khi khởi chạy thành công:
+Đăng nhập pgAdmin tại `http://localhost:5050/` bằng `PGADMIN_DEFAULT_EMAIL` và `PGADMIN_DEFAULT_PASSWORD` trong `.env`.
 
-- Website: http://localhost/
-- pgAdmin: http://localhost:5050/
-- Grafana: http://localhost:3000/
-- Prometheus: http://localhost:9090/
-- Loki health check: http://localhost:3100/ready
-- Node Exporter metrics: http://localhost:9100/metrics
+Tạo kết nối PostgreSQL:
 
-Nginx chuyển tiếp website đến `event-app:5000` theo cấu hình trong `nginx/default.conf`. Ứng dụng có endpoint metrics tại đường dẫn nội bộ `/metrics`.
+- Host: `postgres`
+- Port: `5432`
+- Database: giá trị `POSTGRES_DB`
+- User: giá trị `POSTGRES_USER`
+- Password: giá trị `POSTGRES_PASSWORD`
 
-## 7. Kết nối PostgreSQL bằng pgAdmin
+Event App tự tạo bảng `events` và `bookings`. Kiểm tra database từ host:
 
-Đăng nhập pgAdmin tại `http://localhost:5050/` bằng thông tin được cấu hình trong `docker-compose.yml`.
+```bash
+docker compose exec postgres pg_isready
+docker compose logs postgres
+docker compose exec event-app wget -qO- http://127.0.0.1:5000/health
+```
 
-Tạo một Server mới trong pgAdmin với các thông số:
+Endpoint health trả về `{"status":"ok","database":"connected"}` khi ứng dụng kết nối PostgreSQL thành công.
 
-- **Host name/address:** `postgres`
-- **Port:** `5432`
-- **Maintenance database:** `event_db`
-- **Username:** `event_user`
-- **Password:** giá trị `POSTGRES_PASSWORD` trong cấu hình Compose
+## 6. Nginx, HTTPS và security headers
 
-Không dùng `localhost` làm Host trong pgAdmin vì pgAdmin chạy trong container; hãy dùng tên service Docker là `postgres`.
+Nginx redirect HTTP sang HTTPS và reverse proxy đến `event-app:5000`. Cấu hình nằm ở `nginx/default.conf`; chứng thư demo được sinh bởi `scripts/generate-certs.sh` và không commit vào Git.
 
-Khi ứng dụng khởi động, server tự tạo hai bảng chính:
+Kiểm tra website và headers:
 
-- `events`: thông tin sự kiện và số vé còn lại.
-- `bookings`: thông tin các lượt đặt vé.
+```bash
+curl -k -I https://localhost/
+curl -I http://localhost/
+docker compose exec nginx nginx -T
+```
 
-## 8. Prometheus và Grafana
+Các header được cấu hình gồm `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy` và `Content-Security-Policy`.
 
-Prometheus được cấu hình trong `prometheus/prometheus.yml` với chu kỳ thu thập mặc định 15 giây. Các target hiện tại gồm:
+## 7. Prometheus, Grafana, container và database metrics
 
-- `prometheus:9090`
-- `node-exporter:9100`
-- `event-app:5000`
+Prometheus thu thập:
 
-Kiểm tra target:
+- `event-app:5000/metrics`: request metrics của web app.
+- `node-exporter:9100`: metrics hệ điều hành.
+- `cadvisor:8080`: metrics container.
+- `postgres-exporter:9187`: metrics PostgreSQL.
+- `prometheus:9090`: metrics Prometheus.
 
-1. Mở http://localhost:9090/targets.
-2. Kiểm tra các target có trạng thái **UP**.
-3. Mở http://localhost:3000/ để vào Grafana.
-4. Thêm data source Prometheus với URL nội bộ `http://prometheus:9090`.
+Mở http://localhost:9090/targets và kiểm tra các target có trạng thái **UP**. Trong Grafana tại http://localhost:3000/:
 
-Trong Grafana có thể sử dụng các metrics tiêu biểu:
+1. Đăng nhập bằng `GRAFANA_ADMIN_USER` và `GRAFANA_ADMIN_PASSWORD` trong `.env`.
+2. Thêm Prometheus data source: `http://prometheus:9090`.
+3. Tạo dashboard với các truy vấn:
 
 ```promql
 up
 rate(http_requests_total[5m])
-node_cpu_seconds_total
+container_memory_usage_bytes
+pg_up
 ```
 
-Các alert rule nằm trong `rules/alerts.yml`, gồm cảnh báo ứng dụng dừng và CPU máy chủ cao.
+Các alert rule nằm trong `rules/alerts.yml`.
 
-> Dashboard container/DB chuyên sâu cần được bổ sung exporter tương ứng, ví dụ cAdvisor cho container và postgres-exporter cho PostgreSQL. Hiện cấu hình repository mới chứng minh rõ metrics của Prometheus, Node Exporter và Event App.
+## 8. Loki, Promtail và LogQL
 
-## 9. Loki, Promtail và LogQL
+Promtail đọc Docker logs bằng Docker service discovery, gắn label `job`, `service` và `container`, rồi gửi log đến Loki.
 
-Promtail dùng Docker service discovery, đọc log container thông qua Docker socket và gửi đến Loki tại:
-
-```text
-http://loki:3100/loki/api/v1/push
-```
-
-Trong Grafana:
-
-1. Vào **Connections → Data sources → Add data source**.
-2. Chọn **Loki**.
-3. Nhập URL `http://loki:3100`.
-4. Chọn **Save & test**.
-5. Mở **Explore**, chọn data source Loki và chạy các truy vấn:
+Trong Grafana, thêm Loki data source với URL `http://loki:3100`, mở **Explore** và chạy:
 
 ```logql
 {job="docker"}
@@ -202,84 +132,71 @@ Trong Grafana:
 {job="docker"} |= "ERROR"
 ```
 
-Các label `job`, `container` và `service` được tạo trong `promtail/promtail-config.yml`. Nếu không có dữ liệu, tạo một vài request đến website trước rồi chờ Promtail gửi log về Loki.
-
-## 10. Kiểm tra Nginx Reverse Proxy
-
-Kiểm tra website đi qua Nginx:
+Tạo request trước khi truy vấn để sinh log:
 
 ```bash
-curl -I http://localhost/
+curl -k https://localhost/
+curl -k https://localhost/health
 ```
 
-Kiểm tra cấu hình Nginx trong container:
+## 9. Hardening đã áp dụng
+
+- Event App chạy bằng user `node`, không phải root.
+- PostgreSQL nằm trong network `backend` có `internal: true`.
+- Secrets nằm trong `.env`, còn `.env` bị loại khỏi Git; repository chỉ chứa `.env.example`.
+- Event App có `read_only: true` và thư mục `/tmp` dạng `tmpfs`.
+- Nginx, Event App, Node Exporter và Promtail dùng `no-new-privileges`.
+- Nginx mount cấu hình và chứng thư ở chế độ read-only.
+- PostgreSQL và Event App có healthcheck.
+- Security headers và HTTPS tự ký được cấu hình tại Nginx.
+- Các cổng quản trị pgAdmin, Prometheus, Loki, Node Exporter và cAdvisor chỉ bind localhost; Grafana vẫn public để demo và nên giới hạn bằng firewall khi triển khai thật.
+
+Kiểm tra non-root và network:
 
 ```bash
-docker compose exec nginx nginx -T
+docker compose exec event-app id
+docker network ls
+docker inspect event-app --format '{{json .NetworkSettings.Networks}}'
+docker inspect event-app --format '{{json .HostConfig.SecurityOpt}}'
 ```
 
-Cấu hình hiện tại chuyển tiếp:
+## 10. Cấu trúc repository
 
 ```text
-http://localhost/  ->  http://event-app:5000
+app/                  Event App, Dockerfile và health endpoint
+nginx/                Reverse proxy, HTTPS và security headers
+prometheus/           Prometheus scrape targets
+rules/                Alert rules
+loki/                 Loki config
+promtail/             Promtail config và LogQL labels
+scripts/              Script sinh chứng thư tự ký
+docker-compose.yml    Toàn bộ hạ tầng
+.env.example          Mẫu biến môi trường, không chứa secrets thật
 ```
 
-> **Trạng thái bảo mật cần hoàn thiện:** file `nginx/default.conf` hiện mới có reverse proxy và các header chuyển tiếp cơ bản; chưa khai báo đầy đủ các security headers như `X-Content-Type-Options`, `X-Frame-Options`, `Content-Security-Policy` và chưa bật HTTPS. Cần bổ sung trước khi khẳng định tiêu chí security headers/HTTPS đã hoàn tất.
-
-## 11. Kiểm tra hardening
-
-Một số cơ chế cách ly hiện có:
-
-- Event App và PostgreSQL không public port trực tiếp ra host.
-- Các service dùng Docker bridge network riêng `event-net`.
-- Promtail chỉ mount Docker socket ở chế độ read-only.
-- Nginx mount file cấu hình ở chế độ read-only.
-
-Các việc cần bổ sung để đáp ứng đầy đủ tiêu chí hardening:
-
-- Chuyển mật khẩu sang file `.env` hoặc Docker secrets và thêm `.env` vào `.gitignore`.
-- Không dùng mật khẩu mẫu yếu trong repository.
-- Chạy Event App bằng user non-root trong `app/Dockerfile`.
-- Cân nhắc `read_only`, `cap_drop: [ALL]` và `security_opt: [no-new-privileges:true]`.
-- Bổ sung security headers hoặc HTTPS tự ký cho Nginx.
-- Hạn chế các cổng quản trị chỉ cho phép truy cập từ localhost hoặc mạng quản trị.
-
-## 12. Cấu trúc repository
-
-```text
-.
-├── app/
-│   ├── Dockerfile
-│   ├── package.json
-│   └── server.js
-├── loki/
-│   └── loki-config.yml
-├── nginx/
-│   └── default.conf
-├── prometheus/
-│   └── prometheus.yml
-├── promtail/
-│   └── promtail-config.yml
-├── rules/
-│   └── alerts.yml
-├── docker-compose.yml
-├── README.md
-└── .gitignore
-```
-
-## 13. Lịch sử các commit chính
+## 11. Lịch sử commit
 
 | Mốc | Commit | Nội dung |
 |---|---|---|
-| Commit 1 | `5bbffb0` | Ứng dụng Node.js, PostgreSQL, pgAdmin và Nginx Reverse Proxy |
+| Commit 1 | `5bbffb0` | Event App, PostgreSQL, pgAdmin và Nginx |
 | Commit 2 | `7a6373f` | Prometheus, Node Exporter và alert rules |
 | Commit 3 | `9f1e1e3` | Loki, Promtail, LogQL và README |
-| Bổ sung | `f602ab0` | Mở port `5050` cho pgAdmin |
+| Bổ sung | `f602ab0` | Mở port pgAdmin |
+| Hardening | Sau khi cập nhật | HTTPS, metrics DB/container, healthcheck và non-root |
 
-Các commit đầy đủ có thể xem tại:
+## 12. Checklist minh chứng khi demo
 
-- https://github.com/Dvihndg/DTC245200706/commits/main
+- [ ] Ảnh website mở qua `https://localhost/`.
+- [ ] Ảnh `curl -k -I https://localhost/` có HTTPS và security headers.
+- [ ] Ảnh pgAdmin kết nối `postgres` và hiển thị bảng `events`, `bookings`.
+- [ ] Ảnh `docker compose ps` và endpoint `/health` trả về database connected.
+- [ ] Ảnh Prometheus Targets đều **UP**.
+- [ ] Ảnh Grafana dashboard có web, container và PostgreSQL metrics.
+- [ ] Ảnh Grafana Explore với tối thiểu 3 query LogQL.
+- [ ] Ảnh kiểm tra `id` của Event App cho thấy user không phải root.
+- [ ] Ảnh network `backend` có `internal: true` và cấu hình security options.
+- [ ] Điền họ tên, lớp và giảng viên vào bìa báo cáo.
 
-## 14. Ghi chú bảo mật
+## 13. Bảo mật
 
-Các giá trị mật khẩu hiện có trong `docker-compose.yml` chỉ phù hợp cho môi trường thực hành cục bộ. Không sử dụng các giá trị này trong môi trường thật. Khi nộp repository, nên chuyển sang biến môi trường hoặc Docker secrets và tuyệt đối không commit thông tin đăng nhập thật.
+Không commit `.env`, chứng thư private key hoặc mật khẩu thật. Các giá trị trong `.env.example` chỉ là placeholder và phải được thay bằng mật khẩu mạnh trước khi chạy. Chứng thư tự ký chỉ dùng cho demo nội bộ; môi trường thật nên dùng chứng thư CA hợp lệ.
