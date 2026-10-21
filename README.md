@@ -1,7 +1,7 @@
 # Hệ thống đặt vé sự kiện – Docker Compose
 
 **Mã số sinh viên:** DTC245200706
-**Repository:** https://github.com/Dvihndg/DTC245200706
+**Repository:** https://github.com/DTC245200706/DTC245200706
 
 ## 1. Giới thiệu
 
@@ -33,7 +33,7 @@ Mục tiêu: triển khai ứng dụng và database, reverse proxy HTTPS, thu th
 Yêu cầu: Docker Engine, Docker Compose v2, Git và OpenSSL.
 
 ```bash
-git clone https://github.com/Dvihndg/DTC245200706.git
+git clone https://github.com/DTC245200706/DTC245200706.git
 cd DTC245200706
 cp .env.example .env
 # Sửa các mật khẩu mạnh trong .env trước khi chạy
