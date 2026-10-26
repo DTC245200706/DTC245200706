@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech & Music Festival 2026 - Cổng Đăng Ký Vé</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            900: '#0b0f19',
+                            800: '#111827',
+                            700: '#1f2937',
+                            600: '#374151'
+                        },
+                        primary: {
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        /* Light mode vs Dark mode smooth transitions */
+        html {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-dark-900 text-gray-900 dark:text-gray-100 min-h-screen flex flex-col selection:bg-primary-500 selection:text-white transition-colors duration-300">
+
+    <!-- HEADER & NAVIGATION -->
+    <header class="sticky top-0 z-40 bg-white/80 dark:bg-dark-800/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo & Brand -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('user')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary-600 to-pink-600 flex items-center justify-center shadow-lg shadow-primary-500/30">
+                    <i class="fa-solid fa-ticket text-white text-lg"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-gray-900 via-gray-700 to-gray-500 dark:from-white dark:via-gray-200 dark:to-gray-400 bg-clip-text text-transparent">NexusFest '26</span>
+                    <span class="block text-xs text-primary-600 dark:text-primary-400 font-medium">Official Ticketing Portal</span>
+                </div>
+            </div>
+
+            <!-- Navigation Actions & Theme Toggle -->
+            <div class="flex items-center space-x-3">
+                <!-- Theme Toggle Button -->
+                <button onclick="toggleTheme()" id="themeToggleBtn" class="p-2.5 rounded-xl bg-gray-100 dark:bg-dark-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-600 transition-all border border-gray-200 dark:border-gray-700" title="Chuyển đổi giao diện sáng/tối">
+                    <i class="fa-solid fa-moon dark:hidden text-lg"></i>
+                    <i class="fa-solid fa-sun hidden dark:inline text-lg text-amber-400"></i>
+                </button>
+
+                <button onclick="switchView('user')" id="navUserBtn" class="px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 bg-primary-600 text-white shadow-lg shadow-primary-600/20 flex items-center space-x-2">
+                    <i class="fa-solid fa-store"></i>
+                    <span>Cổng Đăng Ký</span>
+                </button>
+                <button onclick="switchView('admin')" id="navAdminBtn" class="px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 bg-gray-100 dark:bg-dark-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-600 hover:text-gray-900 dark:hover:text-white flex items-center space-x-2 border border-gray-200 dark:border-gray-700">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <span>Admin Dashboard</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow">
+
+        <!-- ================= USER PORTAL VIEW ================= -->
+        <div id="userPortalView" class="space-y-16 pb-20">
+            <!-- Hero Banner Section -->
+            <section class="relative overflow-hidden pt-12 pb-20 px-4 sm:px-6 lg:px-8 border-b border-gray-200 dark:border-gray-800/60 bg-gradient-to-b from-gray-100/50 to-gray-50 dark:from-dark-800/50 dark:to-dark-900 transition-colors duration-300">
+                <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#6366f1_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
+                <div class="max-w-5xl mx-auto text-center relative z-10">
+                    <div class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-600 dark:text-primary-400 text-xs font-semibold mb-6 uppercase tracking-wider animate-pulse">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <span>15 - 16 Tháng 12, 2026 • Sân vận động Quốc gia</span>
+                    </div>
+                    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-6 leading-tight">
+                        TECH & MUSIC <span class="bg-gradient-to-r from-primary-600 via-pink-600 to-purple-600 dark:from-primary-400 dark:via-pink-500 dark:to-purple-500 bg-clip-text text-transparent">FESTIVAL 2026</span>
+                    </h1>
+                    <p class="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-10">
+                        Đại nhạc hội công nghệ và âm nhạc lớn nhất năm. Trải nghiệm không gian đỉnh cao cùng công nghệ Hologram, AI tương tác và dàn nghệ sĩ hàng đầu.
+                    </p>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <a href="#ticketSelection" class="px-8 py-4 rounded-xl bg-primary-600 hover:bg-primary-500 text-white font-semibold shadow-xl shadow-primary-600/30 transition-all transform hover:-translate-y-0.5 flex items-center space-x-2">
+                            <span>Mua Vé Ngay</span>
+                            <i class="fa-solid fa-arrow-down"></i>
+                        </a>
+                        <button onclick="openCheckMyTicketModal()" class="px-8 py-4 rounded-xl bg-white dark:bg-dark-700 hover:bg-gray-100 dark:hover:bg-dark-600 text-gray-800 dark:text-gray-200 font-semibold border border-gray-300 dark:border-gray-600 transition-all flex items-center space-x-2 shadow-sm">
+                            <i class="fa-solid fa-search"></i>
+                            <span>Tra Cứu Vé Của Tôi</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ticket Types & Selection Section -->
+            <section id="ticketSelection" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-3">Chọn Hạng Vé Phù Hợp</h2>
+                    <p class="text-gray-600 dark:text-gray-400">Số lượng vé có hạn, hãy nhanh tay chọn cho mình chỗ ngồi tốt nhất.</p>
+                </div>
+
+                <!-- Ticket Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                    <!-- Standard Ticket -->
+                    <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-gray-700/80 p-8 flex flex-col justify-between relative shadow-xl hover:border-gray-400 dark:hover:border-gray-500 transition-all">
+                        <div>
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-bold uppercase">Standard</span>
+                                <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-md"><span id="stockStandard">150</span> vé còn lại</span>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Vé Thường</h3>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mb-6">Trải nghiệm không gian đại nhạc hội khu vực phổ thông chung.</p>
+                            <div class="text-3xl font-extrabold text-gray-900 dark:text-white mb-6">399.000 <span class="text-sm font-normal text-gray-500 dark:text-gray-400">VNĐ</span></div>
+                            <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-8">
+                                <li class="flex items-center space-x-3"><i class="fa-solid fa-check text-primary-600 dark:text-primary-400"></i><span>Vào cổng khu vực GA (General Admission)</span></li>
+                                <li class="flex items-center space-x-3"><i class="fa-solid fa-check text-primary-600 dark:text-primary-400"></i><span>Nhận vòng tay check-in tiêu chuẩn</span></li>
+                                <li class="flex items-center space-x-3"><i class="fa-solid fa-check text-primary-600 dark:text-primary-400"></i><span>Tham gia khu vực minigame ngoài trời</span></li>
+                            </ul>
+                        </div>
+                        <button onclick="selectTicketType('Standard', 399000)" class="w-full py-3 rounded-xl bg-gray-100 dark:bg-dark-700 hover:bg-primary-600 dark:hover:bg-primary-600 hover:text-white text-gray-800 dark:text-white font-semibold transition-all border border-gray-300 dark:border-gray-600 hover:border-transparent flex items-center justify-center space-x-2">
+                            <span>Chọn Vé Này</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- VIP Ticket -->
+                    <div class="bg-white dark:bg-dark-800 rounded-2xl border-2 border-primary-500 p-8 flex flex-col justify-between relative shadow-2xl shadow-primary-500/10 transform md:-translate-y-2">
+                        <div class="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-primary-600 to-indigo-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-md">
+                            Phổ Biến Nhất
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="px-3 py-1 rounded-lg bg-primary-500/20 text-primary-700 dark:text-primary-300 text-xs font-bold uppercase">VIP Access</span>
+                                <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-md"><span id="stockVIP">75</span> vé còn lại</span>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Vé VIP</h3>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mb-6">Đặc quyền gần sân khấu chính, nước uống và quà tặng độc quyền.</p>
+                            <div class="text-3xl font-extrabold text-gray-900 dark:text-white mb-6">899.000 <span class="text-sm font-normal text-gray-500 dark:text-gray-400">VNĐ</span></div>
+                            <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-8">
+                                <li class="flex items-center space-x-3"><i class="fa-solid fa-check text-primary-600 dark:text-primary-400"></i><span>Khu vực đứng gần sân khấu (VIP Zone)</span></li>
+                                <li class="flex items-center space-x-3"><i class="fa-solid fa-check text-primary-600 dark:text-primary-400"></i><span>Tặng kèm Áo thun & Poster độc quyền</span></li>
+                                <li class="flex items-center space-x-3"><i class="fa-solid fa-check text-primary-600 dark:text-primary-400"></i><span>Lối đi check-in riêng không phải xếp hàng</span></li>
+                                <li class="flex items-center space-x-3"><i class="fa-solid fa-check text-primary-600 dark:text-primary-400"></i><span>Miễn phí nước suối suốt sự kiện</span></li>
+                            </ul>
+                        </div>
+                        <button onclick="selectTicketType('VIP', 899000)" class="w-full py-3 rounded-xl bg-primary-600 hover:bg-primary-500 text-white font-semibold shadow-lg shadow-primary-600/30 transition-all flex items-center justify-center space-x-2">
+                            <span>Chọn Vé Này</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Super VIP Ticket -->
+                    <div class="bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-gray-700/80 p-8 flex flex-col justify-between relative shadow-xl hover:border-gray-400 dark:hover:border-gray-500 transition-all">
+                        <div>
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="px-3 py-1 rounded-lg bg-pink-500/20 text-pink-700 dark:text-pink-300 text-xs font-bold uppercase">Super VIP</span>
+                                <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-md"><span id="stockSuperVIP">20</span> vé còn lại</span>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Vé Super VIP</h3>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mb-6">Trải nghiệm đẳng cấp cao nhất: Gặp gỡ nghệ sĩ & Lounge riêng biệt.</p>
+                            <div class="text-3xl font-extrabold text-gray-900 dark:text-white mb-6">1.999.000 <span class="text-sm font-normal text-gray-500 dark:text-gray-400">VNĐ</span></div>
+                            <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-8">
+                                <li class="flex items-center space-x-3"><i class="fa-solid fa-check text-primary-600 dark:text-primary-400"></i><span>Quyền lợi toàn bộ gói VIP</span></li>
+                                <li class="flex items-center space-x-3"><i class="fa-solid fa-check text-primary-600 dark:text-primary-400"></i><span>Gặp gỡ giao lưu (Meet & Greet) nghệ sĩ</span></li>
+                                <li class="flex items-center space-x-3"><i class="fa-solid fa-check text-primary-600 dark:text-primary-400"></i><span>Khu vực Lounge cao cấp phục vụ Teabreak</span></li>
+                                <li class="flex items-center space-x-3"><i class="fa-solid fa-check text-primary-600 dark:text-primary-400"></i><span>Quà tặng lưu niệm giới hạn (Limited Box)</span></li>
+                            </ul>
+                        </div>
+                        <button onclick="selectTicketType('Super VIP', 1999000)" class="w-full py-3 rounded-xl bg-gray-100 dark:bg-dark-700 hover:bg-primary-600 dark:hover:bg-primary-600 hover:text-white text-gray-800 dark:text-white font-semibold transition-all border border-gray-300 dark:border-gray-600 hover:border-transparent flex items-center justify-center space-x-2">
+                            <span>Chọn Vé Này</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Registration Form Section -->
+                <div id="registrationFormContainer" class="max-w-3xl mx-auto bg-white dark:bg-dark-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 shadow-2xl transition-colors duration-300">
+                    <div class="flex items-center space-x-3 mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+                        <div class="w-10 h-10 rounded-lg bg-primary-500/10 dark:bg-primary-600/20 text-primary-600 dark:text-primary-400 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Form Đăng Ký Thông Tin Vé</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Điền đầy đủ thông tin để hoàn tất việc giữ chỗ và thanh toán.</p>
+                        </div>
+                    </div>
+
+                    <form id="ticketForm" onsubmit="handleRegistrationSubmit(event)" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Full Name -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Họ và Tên khách hàng *</label>
+                                <input type="text" id="buyerName" required placeholder="Ví dụ: Nguyễn Văn A" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-primary-500 transition-colors">
+                            </div>
+                            <!-- Phone Number -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Số điện thoại *</label>
+                                <input type="tel" id="buyerPhone" required placeholder="Ví dụ: 0912345678" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-primary-500 transition-colors">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Email -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Địa chỉ Email (Nhận vé điện tử) *</label>
+                                <input type="email" id="buyerEmail" required placeholder="name@example.com" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-primary-500 transition-colors">
+                            </div>
+                            <!-- Selected Ticket Type & Quantity -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Loại vé</label>
+                                    <select id="selectedTicketType" onchange="updateTotalPrice()" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-primary-500 transition-colors">
+                                        <option value="Standard">Standard (399k)</option>
+                                        <option value="VIP" selected>VIP (899k)</option>
+                                        <option value="Super VIP">Super VIP (1.999k)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Số lượng</label>
+                                    <input type="number" id="ticketQuantity" min="1" max="10" value="1" onchange="updateTotalPrice()" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-primary-500 transition-colors">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Method Selection -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Chọn phương thức thanh toán *</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <label class="flex items-center space-x-3 p-4 rounded-xl bg-gray-50 dark:bg-dark-900 border border-primary-500 cursor-pointer hover:bg-gray-100 dark:hover:bg-dark-700 transition-all payment-method-card">
+                                    <input type="radio" name="paymentMethod" value="QR Ngân Hàng" checked class="text-primary-600 focus:ring-primary-500">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fa-solid fa-qrcode text-primary-600 dark:text-primary-400 text-lg"></i>
+                                        <span class="text-sm font-medium text-gray-900 dark:text-white">QR Ngân Hàng</span>
+                                    </div>
+                                </label>
+                                <label class="flex items-center space-x-3 p-4 rounded-xl bg-gray-50 dark:bg-dark-900 border border-gray-300 dark:border-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-dark-700 transition-all payment-method-card">
+                                    <input type="radio" name="paymentMethod" value="Momo" class="text-primary-600 focus:ring-primary-500">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fa-solid fa-wallet text-pink-500 text-lg"></i>
+                                        <span class="text-sm font-medium text-gray-900 dark:text-white">Ví Momo</span>
+                                    </div>
+                                </label>
+                                <label class="flex items-center space-x-3 p-4 rounded-xl bg-gray-50 dark:bg-dark-900 border border-gray-300 dark:border-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-dark-700 transition-all payment-method-card">
+                                    <input type="radio" name="paymentMethod" value="VNPay" class="text-primary-600 focus:ring-primary-500">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fa-solid fa-credit-card text-blue-500 text-lg"></i>
+                                        <span class="text-sm font-medium text-gray-900 dark:text-white">Cổng VNPay</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Total Price Summary Box -->
+                        <div class="p-4 rounded-xl bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-gray-700/80 flex items-center justify-between">
+                            <div>
+                                <span class="text-sm text-gray-600 dark:text-gray-400 block">Tổng thanh toán dự kiến:</span>
+                                <span id="totalPriceDisplay" class="text-2xl font-bold text-primary-600 dark:text-primary-400">899.000 VNĐ</span>
+                            </div>
+                            <button type="submit" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-primary-600 to-pink-600 hover:from-primary-500 hover:to-pink-500 text-white font-bold shadow-lg shadow-primary-600/30 transition-all">
+                                Xác Nhận & Thanh Toán
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+
+
+        <!-- ================= ADMIN DASHBOARD VIEW ================= -->
+        <div id="adminDashboardView" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+            <!-- Dashboard Header & Actions -->
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Khu Vực Quản Trị (Admin Dashboard)</h1>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">Quản lý toàn bộ vé đã đăng ký, doanh thu và kiểm soát check-in sự kiện.</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="exportData()" class="px-4 py-2.5 rounded-xl bg-white dark:bg-dark-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white text-sm font-medium transition-all flex items-center space-x-2 shadow-sm">
+                        <i class="fa-solid fa-download"></i>
+                        <span>Xuất CSV</span>
+                    </button>
+                    <button onclick="resetAllData()" class="px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 hover:bg-red-500/20 text-sm font-medium transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-rotate-right"></i>
+                        <span>Reset Dữ Liệu</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Overview Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Stat 1: Total Tickets -->
+                <div class="bg-white dark:bg-dark-800 border border-gray-200 dark:border-gray-700/80 rounded-2xl p-6 shadow-xl transition-colors duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Tổng Số Vé Đã Bán</span>
+                        <div class="w-10 h-10 rounded-xl bg-primary-500/10 text-primary-600 dark:text-primary-400 flex items-center justify-center">
+                            <i class="fa-solid fa-ticket"></i>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-900 dark:text-white mb-1" id="statTotalTickets">0</div>
+                    <span class="text-xs text-emerald-600 dark:text-emerald-400 font-medium"><i class="fa-solid fa-arrow-up mr-1"></i>Cập nhật realtime</span>
+                </div>
+
+                <!-- Stat 2: Total Revenue -->
+                <div class="bg-white dark:bg-dark-800 border border-gray-200 dark:border-gray-700/80 rounded-2xl p-6 shadow-xl transition-colors duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Tổng Doanh Thu</span>
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-900 dark:text-white mb-1" id="statTotalRevenue">0 VNĐ</div>
+                    <span class="text-xs text-emerald-600 dark:text-emerald-400 font-medium"><i class="fa-solid fa-arrow-up mr-1"></i>Đã thanh toán thành công</span>
+                </div>
+
+                <!-- Stat 3: Checked-in Count -->
+                <div class="bg-white dark:bg-dark-800 border border-gray-200 dark:border-gray-700/80 rounded-2xl p-6 shadow-xl transition-colors duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Số Lượng Check-in</span>
+                        <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                            <i class="fa-solid fa-clipboard-check"></i>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-900 dark:text-white mb-1" id="statCheckedIn">0</div>
+                    <span class="text-xs text-blue-600 dark:text-blue-400 font-medium">Khách đã có mặt tại sự kiện</span>
+                </div>
+
+                <!-- Stat 4: Pending Payment -->
+                <div class="bg-white dark:bg-dark-800 border border-gray-200 dark:border-gray-700/80 rounded-2xl p-6 shadow-xl transition-colors duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Chờ Thanh Toán</span>
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-900 dark:text-white mb-1" id="statPending">0</div>
+                    <span class="text-xs text-amber-600 dark:text-amber-400 font-medium">Đang chờ xác nhận giao dịch</span>
+                </div>
+            </div>
+
+            <!-- Management Table Section -->
+            <div class="bg-white dark:bg-dark-800 border border-gray-200 dark:border-gray-700/80 rounded-2xl shadow-xl overflow-hidden transition-colors duration-300">
+                <!-- Table Filters & Search Bar -->
+                <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div class="flex items-center space-x-3 w-full md:w-96">
+                        <div class="relative w-full">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-400 dark:text-gray-500">
+                                <i class="fa-solid fa-search"></i>
+                            </span>
+                            <input type="text" id="searchInput" onkeyup="renderAdminTable()" placeholder="Tìm kiếm theo tên, SĐT hoặc mã vé..." class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-300 dark:border-gray-700 rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-primary-500 transition-colors">
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <select id="filterTicketType" onchange="renderAdminTable()" class="bg-gray-50 dark:bg-dark-900 border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:border-primary-500 transition-colors">
+                            <option value="ALL">Tất cả loại vé</option>
+                            <option value="Standard">Standard</option>
+                            <option value="VIP">VIP</option>
+                            <option value="Super VIP">Super VIP</option>
+                        </select>
+                        <select id="filterStatus" onchange="renderAdminTable()" class="bg-gray-50 dark:bg-dark-900 border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:border-primary-500 transition-colors">
+                            <option value="ALL">Tất cả trạng thái</option>
+                            <option value="Đã thanh toán">Đã thanh toán</option>
+                            <option value="Chờ thanh toán">Chờ thanh toán</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100 dark:bg-dark-900/60 text-gray-600 dark:text-gray-400 text-xs uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">
+                                <th class="py-4 px-6 font-semibold">Mã Vé</th>
+                                <th class="py-4 px-6 font-semibold">Khách Hàng</th>
+                                <th class="py-4 px-6 font-semibold">Loại Vé & SL</th>
+                                <th class="py-4 px-6 font-semibold">Tổng Tiền</th>
+                                <th class="py-4 px-6 font-semibold">Thanh Toán</th>
+                                <th class="py-4 px-6 font-semibold">Check-in</th>
+                                <th class="py-4 px-6 font-semibold text-right">Hành Động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminTableBody" class="divide-y divide-gray-200 dark:divide-gray-700/60 text-sm">
+                            <!-- Dynamic rows will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyTableState" class="hidden py-16 text-center">
+                    <div class="w-16 h-16 rounded-full bg-gray-100 dark:bg-dark-700 text-gray-400 dark:text-gray-500 flex items-center justify-center mx-auto mb-4 text-2xl">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 font-medium">Không tìm thấy dữ liệu vé đăng ký nào.</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white dark:bg-dark-800 border-t border-gray-200 dark:border-gray-800 py-8 px-4 text-center text-sm text-gray-500 dark:text-gray-500 transition-colors duration-300">
+        <p>&copy; 2026 NexusFest Portal. All rights reserved. Designed with passion for Tech & Music.</p>
+    </footer>
+
+
+    <!-- ================= MODAL: PAYMENT SIMULATION ================= -->
+    <div id="paymentModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden">
+        <div class="bg-white dark:bg-dark-800 border border-gray-200 dark:border-gray-700 rounded-2xl w-full max-w-md p-6 shadow-2xl relative transform transition-all">
+            <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 rounded-full bg-primary-500/10 text-primary-600 dark:text-primary-400 flex items-center justify-center mx-auto mb-3 text-xl">
+                    <i class="fa-solid fa-qrcode" id="paymentModalIcon"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Xác Nhận Thanh Toán</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1" id="paymentModalDesc">Quét mã QR bên dưới để hoàn tất giao dịch</p>
+            </div>
+
+            <!-- QR Code Simulation Box -->
+            <div class="bg-gray-100 dark:bg-white p-4 rounded-xl flex items-center justify-center mb-6 shadow-inner">
+                <div class="w-48 h-48 bg-white border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center text-gray-800 p-2 text-center">
+                    <i class="fa-solid fa-qrcode text-6xl text-primary-600 mb-2"></i>
+                    <span class="text-xs font-bold" id="qrCodeLabel">VIETQR: MOCK-PAY-2026</span>
+                    <span class="text-[10px] text-gray-500">Nội dung: NEXUSFEST [MãVé]</span>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-dark-900 rounded-xl p-4 mb-6 space-y-2 text-sm">
+                <div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Khách hàng:</span> <span id="payModalName" class="font-medium text-gray-900 dark:text-white">--</span></div>
+                <div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Loại vé:</span> <span id="payModalTicket" class="font-medium text-gray-900 dark:text-white">--</span></div>
+                <div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Số tiền:</span> <span id="payModalAmount" class="font-bold text-primary-600 dark:text-primary-400">--</span></div>
+            </div>
+
+            <div class="flex space-x-3">
+                <button onclick="closePaymentModal()" class="flex-1 py-3 rounded-xl bg-gray-100 dark:bg-dark-700 hover:bg-gray-200 dark:hover:bg-dark-600 text-gray-700 dark:text-gray-300 font-semibold transition-all">Hủy bỏ</button>
+                <button onclick="confirmPaymentSuccess()" class="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold shadow-lg shadow-emerald-600/30 transition-all">Đã Thanh Toán</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= MODAL: E-TICKET SUCCESS ================= -->
+    <div id="ticketModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md hidden">
+        <div class="bg-white dark:bg-dark-800 border border-gray-200 dark:border-gray-700 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative transform transition-all">
+            <button onclick="closeTicketModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto mb-3 text-xl">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Đăng Ký Vé Thành Công!</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Vé điện tử của bạn đã sẵn sàng. Vui lòng lưu lại mã QR để check-in.</p>
+            </div>
+
+            <!-- E-Ticket Card Design -->
+            <div id="eTicketCard" class="bg-gradient-to-br from-gray-900 to-gray-800 dark:from-dark-900 dark:to-dark-700 border-2 border-primary-500/40 rounded-2xl p-6 shadow-2xl mb-6 relative overflow-hidden text-white">
+                <div class="absolute top-0 right-0 transform translate-x-6 -translate-y-6 w-24 h-24 bg-primary-500/10 rounded-full blur-xl pointer-events-none"></div>
+                
+                <div class="flex justify-between items-start border-b border-gray-700 pb-4 mb-4">
+                    <div>
+                        <span class="text-xs text-primary-400 font-bold uppercase tracking-wider">NexusFest '26 E-Ticket</span>
+                        <h4 class="text-lg font-extrabold text-white">Tech & Music Festival 2026</h4>
+                    </div>
+                    <div class="text-right">
+                        <span id="eticketTypeBadge" class="px-2.5 py-1 rounded-md bg-primary-500/20 text-primary-300 text-xs font-bold uppercase">VIP</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-6 text-sm">
+                    <div>
+                        <span class="text-xs text-gray-400 block">Họ và tên:</span>
+                        <span id="eticketName" class="font-bold text-white">Nguyễn Văn A</span>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-400 block">Mã vé độc quyền:</span>
+                        <span id="eticketCode" class="font-mono font-bold text-primary-400">NEX-9824</span>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-400 block">Số điện thoại:</span>
+                        <span id="eticketPhone" class="text-gray-300">0912345678</span>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-400 block">Trạng thái:</span>
+                        <span id="eticketStatus" class="text-emerald-400 font-semibold">Đã thanh toán</span>
+                    </div>
+                </div>
+
+                <!-- QR Area inside Ticket -->
+                <div class="bg-white p-3 rounded-xl flex items-center space-x-4 text-gray-800">
+                    <div class="w-20 h-20 bg-gray-100 border border-gray-300 rounded flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-qrcode text-4xl text-primary-600"></i>
+                    </div>
+                    <div class="text-xs">
+                        <p class="font-bold mb-1">Mã Check-in Cổng Sự Kiện</p>
+                        <p class="text-gray-500">Xuất trình mã QR này tại cổng kiểm soát để nhân viên quét xác thực.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex space-x-3">
+                <button onclick="downloadTicketImage()" class="flex-1 py-3 rounded-xl bg-gray-100 dark:bg-dark-700 hover:bg-gray-200 dark:hover:bg-dark-600 text-gray-800 dark:text-white font-semibold transition-all flex items-center justify-center space-x-2 border border-gray-300 dark:border-gray-600">
+                    <i class="fa-solid fa-download"></i>
+                    <span>Tải Vé Về Máy</span>
+                </button>
+                <button onclick="closeTicketModal()" class="flex-1 py-3 rounded-xl bg-primary-600 hover:bg-primary-500 text-white font-semibold shadow-lg shadow-primary-600/30 transition-all">
+                    Hoàn Tất
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= MODAL: CHECK MY TICKET (LOOKUP) ================= -->
+    <div id="checkMyTicketModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md hidden">
+        <div class="bg-white dark:bg-dark-800 border border-gray-200 dark:border-gray-700 rounded-2xl w-full max-w-md p-6 shadow-2xl relative transform transition-all">
+            <button onclick="closeCheckMyTicketModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 rounded-full bg-primary-500/10 text-primary-600 dark:text-primary-400 flex items-center justify-center mx-auto mb-3 text-xl">
+                    <i class="fa-solid fa-search"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Tra Cứu Vé Đã Đăng Ký</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Nhập số điện thoại hoặc mã vé để tìm kiếm.</p>
+            </div>
+
+            <div class="space-y-4 mb-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Số điện thoại hoặc Mã vé</label>
+                    <input type="text" id="lookupQuery" placeholder="Nhập SĐT hoặc Mã vé (VD: NEX-...)" class="w-full bg-gray-50 dark:bg-dark-900 border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-primary-500 transition-colors">
+                </div>
+                <button onclick="executeLookup()" class="w-full py-3 rounded-xl bg-primary-600 hover:bg-primary-500 text-white font-semibold transition-all shadow-lg shadow-primary-600/30">
+                    Tra Cứu Ngay
+                </button>
+            </div>
+
+            <div id="lookupResultArea" class="space-y-3 max-h-60 overflow-y-auto">
+                <!-- Lookup results populated here -->
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= NOTIFICATION TOAST ================= -->
+    <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-white dark:bg-dark-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white px-6 py-4 rounded-xl shadow-2xl flex items-center space-x-3">
+        <div id="toastIcon" class="text-emerald-600 dark:text-emerald-400 text-xl"><i class="fa-solid fa-circle-check"></i></div>
+        <div>
+            <h5 id="toastTitle" class="font-bold text-sm">Thành công</h5>
+            <p id="toastMessage" class="text-xs text-gray-500 dark:text-gray-400">Thao tác đã được thực hiện thành công.</p>
+        </div>
+    </div>
+
+
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <script>
+        // Initial Mock Data if localStorage is empty
+        const defaultTickets = [
+            {
+                id: "NEX-8821",
+                name: "Nguyễn Hoàng Nam",
+                phone: "0988123456",
+                email: "namnh@gmail.com",
+                type: "VIP",
+                quantity: 1,
+                unitPrice: 899000,
+                total: 899000,
+                paymentMethod: "QR Ngân Hàng",
+                status: "Đã thanh toán",
+                checkIn: "Đã check-in",
+                createdAt: "2026-10-26 14:30"
+            },
+            {
+                id: "NEX-9042",
+                name: "Trần Thị Mai",
+                phone: "0977456789",
+                email: "maitt@outlook.com",
+                type: "Standard",
+                quantity: 2,
+                unitPrice: 399000,
+                total: 798000,
+                paymentMethod: "Momo",
+                status: "Đã thanh toán",
+                checkIn: "Chưa check-in",
+                createdAt: "2026-10-26 15:10"
+            },
+            {
+                id: "NEX-9155",
+                name: "Lê Minh Tuấn",
+                phone: "0905999888",
+                email: "tuanlm@techcorp.vn",
+                type: "Super VIP",
+                quantity: 1,
+                unitPrice: 1999000,
+                total: 1999000,
+                paymentMethod: "VNPay",
+                status: "Chờ thanh toán",
+                checkIn: "Chưa check-in",
+                createdAt: "2026-10-26 16:00"
+            }
+        ];
+
+        // Stock counts configuration
+        const ticketStocks = {
+            "Standard": 150,
+            "VIP": 75,
+            "Super VIP": 20
+        };
+
+        let ticketsData = [];
+
+        // Temporary storage object during registration process
+        let pendingRegistration = null;
+
+        // Initialize App on Load
+        window.onload = function() {
+            // Load theme preference
+            const savedTheme = localStorage.getItem('nexus_theme');
+            if (savedTheme === 'light') {
+                document.documentElement.classList.remove('dark');
+            } else {
+                document.documentElement.classList.add('dark');
+            }
+
+            const savedData = localStorage.getItem('nexus_tickets_data');
+            if (savedData) {
+                try {
+                    ticketsData = JSON.parse(savedData);
+                } catch (e) {
+                    ticketsData = defaultTickets;
+                }
+            } else {
+                ticketsData = defaultTickets;
+                saveDataToLocalStorage();
+            }
+            updateStockUI();
+            updateTotalPrice();
+            renderAdminTable();
+            updateDashboardStats();
+        };
+
+        // Toggle Dark / Light Theme
+        function toggleTheme() {
+            const htmlEl = document.documentElement;
+            if (htmlEl.classList.contains('dark')) {
+                htmlEl.classList.remove('dark');
+                localStorage.setItem('nexus_theme', 'light');
+                showToast("Giao diện sáng", "Đã chuyển sang chế độ Sáng (Light Mode).");
+            } else {
+                htmlEl.classList.add('dark');
+                localStorage.setItem('nexus_theme', 'dark');
+                showToast("Giao diện tối", "Đã chuyển sang chế độ Tối (Dark Mode).");
+            }
+        }
+
+        function saveDataToLocalStorage() {
+            localStorage.setItem('nexus_tickets_data', JSON.stringify(ticketsData));
+            updateStockUI();
+            updateDashboardStats();
+        }
+
+        // Switch View between User Portal and Admin Dashboard
+        function switchView(view) {
+            const userView = document.getElementById('userPortalView');
+            const adminView = document.getElementById('adminDashboardView');
+            const navUserBtn = document.getElementById('navUserBtn');
+            const navAdminBtn = document.getElementById('navAdminBtn');
+
+            if (view === 'user') {
+                userView.classList.remove('hidden');
+                adminView.classList.add('hidden');
+                navUserBtn.className = "px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 bg-primary-600 text-white shadow-lg shadow-primary-600/20 flex items-center space-x-2";
+                navAdminBtn.className = "px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 bg-gray-100 dark:bg-dark-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-600 hover:text-gray-900 dark:hover:text-white flex items-center space-x-2 border border-gray-200 dark:border-gray-700";
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                userView.classList.add('hidden');
+                adminView.classList.remove('hidden');
+                navAdminBtn.className = "px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 bg-primary-600 text-white shadow-lg shadow-primary-600/20 flex items-center space-x-2";
+                navUserBtn.className = "px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 bg-gray-100 dark:bg-dark-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-600 hover:text-gray-900 dark:hover:text-white flex items-center space-x-2 border border-gray-200 dark:border-gray-700";
+                renderAdminTable();
+                updateDashboardStats();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Select ticket type from hero cards
+        function selectTicketType(type, price) {
+            document.getElementById('selectedTicketType').value = type;
+            document.getElementById('ticketQuantity').value = 1;
+            updateTotalPrice();
+            document.getElementById('registrationFormContainer').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Update Total Price calculation
+        function updateTotalPrice() {
+            const type = document.getElementById('selectedTicketType').value;
+            const qty = parseInt(document.getElementById('ticketQuantity').value) || 1;
+            let unitPrice = 399000;
+            if (type === 'VIP') unitPrice = 899000;
+            if (type === 'Super VIP') unitPrice = 1999000;
+
+            const total = unitPrice * qty;
+            document.getElementById('totalPriceDisplay').innerText = total.toLocaleString('vi-VN') + ' VNĐ';
+        }
+
+        // Update Stock counter badges
+        function updateStockUI() {
+            let soldCounts = { "Standard": 0, "VIP": 0, "Super VIP": 0 };
+            ticketsData.forEach(t => {
+                if (soldCounts[t.type] !== undefined) {
+                    soldCounts[t.type] += parseInt(t.quantity);
+                }
+            });
+
+            document.getElementById('stockStandard').innerText = Math.max(0, ticketStocks["Standard"] - soldCounts["Standard"]);
+            document.getElementById('stockVIP').innerText = Math.max(0, ticketStocks["VIP"] - soldCounts["VIP"]);
+            document.getElementById('stockSuperVIP').innerText = Math.max(0, ticketStocks["Super VIP"] - soldCounts["Super VIP"]);
+        }
+
+        // Handle Registration Form Submit -> Open Payment Simulation Modal
+        function handleRegistrationSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('buyerName').value.trim();
+            const phone = document.getElementById('buyerPhone').value.trim();
+            const email = document.getElementById('buyerEmail').value.trim();
+            const type = document.getElementById('selectedTicketType').value;
+            const quantity = parseInt(document.getElementById('ticketQuantity').value);
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+            let unitPrice = 399000;
+            if (type === 'VIP') unitPrice = 899000;
+            if (type === 'Super VIP') unitPrice = 1999000;
+            const total = unitPrice * quantity;
+
+            pendingRegistration = {
+                id: "NEX-" + Math.floor(1000 + Math.random() * 9000),
+                name,
+                phone,
+                email,
+                type,
+                quantity,
+                unitPrice,
+                total,
+                paymentMethod,
+                status: "Chờ thanh toán",
+                checkIn: "Chưa check-in",
+                createdAt: new Date().toISOString().slice(0, 16).replace('T', ' ')
+            };
+
+            // Populate Payment Modal
+            document.getElementById('payModalName').innerText = name;
+            document.getElementById('payModalTicket').innerText = `${type} (x${quantity})`;
+            document.getElementById('payModalAmount').innerText = total.toLocaleString('vi-VN') + ' VNĐ';
+            document.getElementById('qrCodeLabel').innerText = `VIETQR: ${pendingRegistration.id}`;
+
+            // Show Payment Modal
+            document.getElementById('paymentModal').classList.remove('hidden');
+        }
+
+        // Close Payment Modal
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+        }
+
+        // Confirm Payment Success from Modal
+        function confirmPaymentSuccess() {
+            if (!pendingRegistration) return;
+            pendingRegistration.status = "Đã thanh toán";
+            
+            ticketsData.unshift(pendingRegistration);
+            saveDataToLocalStorage();
+
+            closePaymentModal();
+            showToast("Thanh toán thành công!", "Vé của bạn đã được xác nhận và phát hành.");
+
+            openTicketModal(pendingRegistration);
+
+            document.getElementById('ticketForm').reset();
+            pendingRegistration = null;
+        }
+
+        // Open E-Ticket Success Modal
+        function openTicketModal(ticket) {
+            document.getElementById('eticketTypeBadge').innerText = ticket.type;
+            document.getElementById('eticketName').innerText = ticket.name;
+            document.getElementById('eticketCode').innerText = ticket.id;
+            document.getElementById('eticketPhone').innerText = ticket.phone;
+            document.getElementById('eticketStatus').innerText = ticket.status;
+
+            document.getElementById('ticketModal').classList.remove('hidden');
+        }
+
+        function closeTicketModal() {
+            document.getElementById('ticketModal').classList.add('hidden');
+        }
+
+        function downloadTicketImage() {
+            showToast("Đã tải vé", "Vé điện tử đã được lưu về thiết bị của bạn.");
+        }
+
+        // Check My Ticket Modal Functions
+        function openCheckMyTicketModal() {
+            document.getElementById('checkMyTicketModal').classList.remove('hidden');
+            document.getElementById('lookupResultArea').innerHTML = '';
+            document.getElementById('lookupQuery').value = '';
+        }
+
+        function closeCheckMyTicketModal() {
+            document.getElementById('checkMyTicketModal').classList.add('hidden');
+        }
+
+        function executeLookup() {
+            const query = document.getElementById('lookupQuery').value.trim().toLowerCase();
+            const resultArea = document.getElementById('lookupResultArea');
+            resultArea.innerHTML = '';
+
+            if (!query) {
+                showToast("Lỗi", "Vui lòng nhập số điện thoại hoặc mã vé để tra cứu.", "error");
+                return;
+            }
+
+            const matched = ticketsData.filter(t => t.phone.toLowerCase().includes(query) || t.id.toLowerCase().includes(query));
+
+            if (matched.length === 0) {
+                resultArea.innerHTML = `<div class="p-4 rounded-xl bg-gray-50 dark:bg-dark-900 text-center text-gray-500 dark:text-gray-400 text-sm">Không tìm thấy vé nào phù hợp với thông tin này.</div>`;
+                return;
+            }
+
+            matched.forEach(t => {
+                const card = document.createElement('div');
+                card.className = "p-4 rounded-xl bg-gray-50 dark:bg-dark-900 border border-gray-200 dark:border-gray-700 flex items-center justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-bold text-gray-900 dark:text-white">${t.name}</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] bg-primary-500/20 text-primary-700 dark:text-primary-300 font-bold">${t.type}</span>
+                        </div>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 block font-mono mt-1">Mã: ${t.id} | SĐT: ${t.phone}</span>
+                        <span class="text-xs text-emerald-600 dark:text-emerald-400 mt-1 block">${t.status} • ${t.checkIn}</span>
+                    </div>
+                    <button onclick='openTicketModal(${JSON.stringify(t)})' class="px-3 py-1.5 rounded-lg bg-primary-600 hover:bg-primary-500 text-white text-xs font-semibold">
+                        Xem Vé
+                    </button>
+                `;
+                resultArea.appendChild(card);
+            });
+        }
+
+
+        // ================= ADMIN DASHBOARD FUNCTIONS =================
+        function updateDashboardStats() {
+            const totalTickets = ticketsData.reduce((acc, t) => acc + parseInt(t.quantity), 0);
+            
+            const totalRevenue = ticketsData
+                .filter(t => t.status === "Đã thanh toán")
+                .reduce((acc, t) => acc + parseInt(t.total), 0);
+
+            const checkedInCount = ticketsData.filter(t => t.checkIn === "Đã check-in").length;
+            const pendingCount = ticketsData.filter(t => t.status === "Chờ thanh toán").length;
+
+            document.getElementById('statTotalTickets').innerText = totalTickets;
+            document.getElementById('statTotalRevenue').innerText = totalRevenue.toLocaleString('vi-VN') + ' VNĐ';
+            document.getElementById('statCheckedIn').innerText = checkedInCount;
+            document.getElementById('statPending').innerText = pendingCount;
+        }
+
+        function renderAdminTable() {
+            const tbody = document.getElementById('adminTableBody');
+            const emptyState = document.getElementById('emptyTableState');
+            const searchKeyword = document.getElementById('searchInput').value.toLowerCase();
+            const typeFilter = document.getElementById('filterTicketType').value;
+            const statusFilter = document.getElementById('filterStatus').value;
+
+            tbody.innerHTML = '';
+
+            let filtered = ticketsData.filter(t => {
+                const matchSearch = t.name.toLowerCase().includes(searchKeyword) || t.phone.toLowerCase().includes(searchKeyword) || t.id.toLowerCase().includes(searchKeyword);
+                const matchType = typeFilter === 'ALL' || t.type === typeFilter;
+                const matchStatus = statusFilter === 'ALL' || t.status === statusFilter;
+                return matchSearch && matchType && matchStatus;
+            });
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            filtered.forEach((t) => {
+                const row = document.createElement('tr');
+                row.className = "hover:bg-gray-50 dark:hover:bg-dark-700/40 transition-colors";
+
+                const statusBadgeClass = t.status === "Đã thanh toán" 
+                    ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20" 
+                    : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20";
+
+                const checkinBadgeClass = t.checkIn === "Đã check-in"
+                    ? "bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20"
+                    : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400";
+
+                row.innerHTML = `
+                    <td class="py-4 px-6 font-mono font-bold text-primary-600 dark:text-primary-400">${t.id}</td>
+                    <td class="py-4 px-6">
+                        <div class="font-medium text-gray-900 dark:text-white">${t.name}</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">${t.phone} • ${t.email}</div>
+                    </td>
+                    <td class="py-4 px-6">
+                        <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-primary-500/20 text-primary-700 dark:text-primary-300">${t.type}</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 ml-1">x${t.quantity}</span>
+                    </td>
+                    <td class="py-4 px-6 font-semibold text-gray-900 dark:text-white">${t.total.toLocaleString('vi-VN')} VNĐ</td>
+                    <td class="py-4 px-6">
+                        <button onclick="togglePaymentStatus('${t.id}')" class="px-2.5 py-1 rounded-full text-xs font-semibold ${statusBadgeClass} cursor-pointer hover:opacity-80 transition-opacity">
+                            ${t.status}
+                        </button>
+                    </td>
+                    <td class="py-4 px-6">
+                        <button onclick="toggleCheckInStatus('${t.id}')" class="px-2.5 py-1 rounded-full text-xs font-semibold ${checkinBadgeClass} cursor-pointer hover:opacity-80 transition-opacity">
+                            ${t.checkIn}
+                        </button>
+                    </td>
+                    <td class="py-4 px-6 text-right space-x-2">
+                        <button onclick='openTicketModal(${JSON.stringify(t)})' class="p-2 rounded-lg bg-gray-100 dark:bg-dark-700 hover:bg-gray-200 dark:hover:bg-dark-600 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors" title="Xem vé">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                        <button onclick="deleteTicket('${t.id}')" class="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 transition-colors" title="Xóa vé">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Admin Actions
+        function togglePaymentStatus(id) {
+            const ticket = ticketsData.find(t => t.id === id);
+            if (ticket) {
+                ticket.status = ticket.status === "Đã thanh toán" ? "Chờ thanh toán" : "Đã thanh toán";
+                saveDataToLocalStorage();
+                renderAdminTable();
+                showToast("Cập nhật thành công", `Đã đổi trạng thái thanh toán của vé ${id}`);
+            }
+        }
+
+        function toggleCheckInStatus(id) {
+            const ticket = ticketsData.find(t => t.id === id);
+            if (ticket) {
+                ticket.checkIn = ticket.checkIn === "Đã check-in" ? "Chưa check-in" : "Đã check-in";
+                saveDataToLocalStorage();
+                renderAdminTable();
+                showToast("Cập nhật check-in", `Đã cập nhật trạng thái check-in cho vé ${id}`);
+            }
+        }
+
+        function deleteTicket(id) {
+            if (confirm(`Bạn có chắc chắn muốn xóa vé ${id} khỏi hệ thống không?`)) {
+                ticketsData = ticketsData.filter(t => t.id !== id);
+                saveDataToLocalStorage();
+                renderAdminTable();
+                showToast("Đã xóa", `Đã xóa vé ${id} thành công`, "error");
+            }
+        }
+
+        function resetAllData() {
+            if (confirm("Cảnh báo: Thao tác này sẽ đặt lại toàn bộ danh sách vé về mặc định ban đầu!")) {
+                ticketsData = [...defaultTickets];
+                saveDataToLocalStorage();
+                renderAdminTable();
+                showToast("Đã reset", "Đã khôi phục dữ liệu mẫu ban đầu.");
+            }
+        }
+
+        function exportData() {
+            let csvContent = "data:text/csv;charset=utf-8,MaVe,HoTen,Phone,Email,LoaiVe,SoLuong,TongTien,ThanhToan,CheckIn\n";
+            ticketsData.forEach(t => {
+                csvContent += `${t.id},"${t.name}",${t.phone},${t.email},${t.type},${t.quantity},${t.total},"${t.status}","${t.checkIn}"\n`;
+            });
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "nexusfest_tickets_export.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("Xuất file thành công", "Đã tải file CSV danh sách vé.");
+        }
+
+        // Toast Notification Helper
+        function showToast(title, message, type = 'success') {
+            const toast = document.getElementById('toastNotification');
+            const toastTitle = document.getElementById('toastTitle');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastTitle.innerText = title;
+            toastMessage.innerText = message;
+
+            if (type === 'error') {
+                toastIcon.innerHTML = '<i class="fa-solid fa-circle-exclamation text-red-500"></i>';
+            } else {
+                toastIcon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400"></i>';
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>

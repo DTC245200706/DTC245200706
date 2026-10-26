@@ -25,7 +25,7 @@ const pool = new Pool({
   port: 5432,
 });
 
-// Tự động tạo bảng và dữ liệu sự kiện ban đầu
+// Khởi tạo Database bảng sự kiện và vé đặt
 async function initDB() {
   try {
     await pool.query(`
@@ -38,10 +38,17 @@ async function initDB() {
       );
       CREATE TABLE IF NOT EXISTS bookings (
         id SERIAL PRIMARY KEY,
+        ticket_code VARCHAR(50) UNIQUE NOT NULL,
         event_id INT REFERENCES events(id),
         user_name VARCHAR(100) NOT NULL,
+        user_phone VARCHAR(20) NOT NULL,
         user_email VARCHAR(100) NOT NULL,
-        tickets INT NOT NULL,
+        ticket_type VARCHAR(50) NOT NULL,
+        quantity INT NOT NULL,
+        total_amount INT NOT NULL,
+        payment_method VARCHAR(50) NOT NULL,
+        status VARCHAR(50) DEFAULT 'Đã thanh toán',
+        check_in VARCHAR(50) DEFAULT 'Chưa check-in',
         booked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
@@ -49,97 +56,112 @@ async function initDB() {
     if (parseInt(res.rows[0].count) === 0) {
       await pool.query(`
         INSERT INTO events (title, date, total_tickets, remaining_tickets) VALUES
-        ('Hội thảo IT & DevOps Cloud', '2026-10-15', 100, 100),
-        ('Đêm nhạc EDM Sinh viên ICTU', '2026-11-20', 250, 250);
+        ('Tech & Music Festival 2026', '2026-12-15', 245, 245);
       `);
     }
-    console.log("Database initialized successfully!");
-  } catch (e) {
-    console.error("Dang doi database khoi dong...", e.message);
-    setTimeout(initDB, 3000);
+  } catch (err) {
+    console.error('Lỗi khởi tạo Database:', err);
   }
 }
+
 initDB();
 
-// Log mọi request
-app.use((req, res, next) => {
-  res.on('finish', () => {
-    httpRequestCounter.inc({ method: req.method, route: req.path, status: res.statusCode });
-    console.log(`[EVENT_LOG] ${req.method} ${req.path} Status:${res.statusCode}`);
-  });
-  next();
+// API lấy dữ liệu vé cho Admin & Frontend
+app.get('/api/tickets', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM bookings ORDER BY booked_at DESC');
+    const formatted = result.rows.map(row => ({
+      id: row.ticket_code,
+      name: row.user_name,
+      phone: row.user_phone,
+      email: row.user_email,
+      type: row.ticket_type,
+      quantity: row.quantity,
+      total: row.total_amount,
+      paymentMethod: row.payment_method,
+      status: row.status,
+      checkIn: row.check_in,
+      createdAt: row.booked_at ? row.booked_at.toISOString().slice(0, 16).replace('T', ' ') : ''
+    }));
+    res.json(formatted);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Lỗi lấy danh sách vé' });
+  }
 });
 
-// Endpoint metric
+// API tạo đặt vé mới từ Frontend
+app.post('/api/book', async (req, res) => {
+  const { name, phone, email, type, quantity, paymentMethod } = req.body;
+  try {
+    const qty = parseInt(quantity) || 1;
+    let unitPrice = 399000;
+    if (type === 'VIP') unitPrice = 899000;
+    if (type === 'Super VIP') unitPrice = 1999000;
+    const total = unitPrice * qty;
+    const ticketCode = "NEX-" + Math.floor(1000 + Math.random() * 9000);
+
+    const eventRes = await pool.query('SELECT id FROM events LIMIT 1');
+    const eventId = eventRes.rows.length > 0 ? eventRes.rows[0].id : 1;
+
+    await pool.query(
+      'INSERT INTO bookings (ticket_code, event_id, user_name, user_phone, user_email, ticket_type, quantity, total_amount, payment_method, status, check_in) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
+      [ticketCode, eventId, name, phone, email, type, qty, total, paymentMethod, 'Đã thanh toán', 'Chưa check-in']
+    );
+
+    res.json({ success: true, ticket: { id: ticketCode, name, phone, email, type, quantity: qty, total, paymentMethod, status: 'Đã thanh toán', checkIn: 'Chưa check-in' } });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Lỗi xử lý đặt vé' });
+  }
+});
+
+// API cập nhật trạng thái check-in hoặc thanh toán
+app.put('/api/tickets/:id', async (req, res) => {
+  const { id } = req.params;
+  const { status, checkIn } = req.body;
+  try {
+    if (status !== undefined) {
+      await pool.query('UPDATE bookings SET status = $1 WHERE ticket_code = $2', [status, id]);
+    }
+    if (checkIn !== undefined) {
+      await pool.query('UPDATE bookings SET check_in = $1 WHERE ticket_code = $2', [checkIn, id]);
+    }
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Lỗi cập nhật vé' });
+  }
+});
+
+// API xóa vé
+app.delete('/api/tickets/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query('DELETE FROM bookings WHERE ticket_code = $1', [id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Lỗi xóa vé' });
+  }
+});
+
+// Route trang chủ trả về file index.html cực kỳ sạch sẽ
+app.get('/', async (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
+
+// Endpoint metrics Prometheus
 app.get('/metrics', async (req, res) => {
-  res.set('Content-Type', client.register.contentType);
+  res.setHeader('Content-Type', client.register.contentType);
   res.end(await client.register.metrics());
 });
 
-// Trang chủ xem sự kiện và đặt vé
-app.get('/', async (req, res) => {
-  try {
-    const events = await pool.query('SELECT * FROM events ORDER BY id ASC');
-    let html = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Hệ Thống Đặt Vé Sự Kiện</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-      </head>
-      <body class="container py-4 bg-light">
-        <h2 class="text-primary mb-4">Cổng Đăng Ký Vé Sự Kiện Trực Tuyến</h2>
-        <div class="row">
-    `;
-    events.rows.forEach(e => {
-      html += `
-        <div class="col-md-6 mb-3">
-          <div class="card shadow-sm">
-            <div class="card-body">
-              <h5 class="card-title">${e.title}</h5>
-              <p>Ngày diễn ra: <strong>${e.date}</strong></p>
-              <p>Số vé còn lại: <span class="badge bg-success">${e.remaining_tickets} / ${e.total_tickets}</span></p>
-              <form action="/book" method="POST">
-                <input type="hidden" name="event_id" value="${e.id}">
-                <div class="mb-2"><input class="form-control" name="user_name" placeholder="Họ và tên" required></div>
-                <div class="mb-2"><input class="form-control" type="email" name="user_email" placeholder="Email nhận vé" required></div>
-                <div class="mb-2"><input class="form-control" type="number" name="tickets" value="1" min="1" max="5" required></div>
-                <button type="submit" class="btn btn-primary w-100" ${e.remaining_tickets <= 0 ? 'disabled' : ''}>
-                  ${e.remaining_tickets > 0 ? 'Xác Nhận Đặt Vé' : 'Hết Vé'}
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      `;
-    });
-    html += `</div></body></html>`;
-    res.send(html);
-  } catch (err) {
-    res.status(500).send("Lỗi kết nối cơ sở dữ liệu: " + err.message);
-  }
+// Health check cho Docker
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
 });
 
-// Xử lý logic đặt vé
-app.post('/book', async (req, res) => {
-  const { event_id, user_name, user_email, tickets } = req.body;
-  try {
-    const ev = await pool.query('SELECT remaining_tickets FROM events WHERE id = $1', [event_id]);
-    if (ev.rows.length > 0 && ev.rows[0].remaining_tickets >= tickets) {
-      await pool.query('BEGIN');
-      await pool.query('INSERT INTO bookings (event_id, user_name, user_email, tickets) VALUES ($1, $2, $3, $4)', [event_id, user_name, user_email, tickets]);
-      await pool.query('UPDATE events SET remaining_tickets = remaining_tickets - $1 WHERE id = $2', [tickets, event_id]);
-      await pool.query('COMMIT');
-      console.log(`[BOOKING SUCCESS] Khách ${user_name} (${user_email}) mua ${tickets} vé sự kiện ID ${event_id}`);
-      res.send('<script>alert("Đặt vé thành công!"); window.location.href="/";</script>');
-    } else {
-      res.status(400).send("Số lượng vé còn lại không đủ!");
-    }
-  } catch (err) {
-    await pool.query('ROLLBACK');
-    console.error("[BOOKING ERROR]", err.message);
-    res.status(500).send("Lỗi máy chủ khi đặt vé");
-  }
+app.listen(port, () => {
+  console.log(`Server đang chạy tại cổng ${port}`);
 });
-
-app.listen(port, () => console.log(`Event app chay tai cong ${port}`));
